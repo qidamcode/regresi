@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prediksi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Regresi</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Analisis</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="m-3"></div>
+  <div class="container">
+    <h3>Seluruh Data</h3>
+    <div class="m-3"></div>
+    <table id="all_data" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in df.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in df.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  <div class="container">
+    <h3>Data Training (X)</h3>
+    <div class="m-3"></div>
+    <table id="Xtrain_df" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in display_X_train.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in display_X_train.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br><br>
+    <h3>Data Training (y)</h3>
+    <div class="m-3"></div>
+    <table id="ytrain_df" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in display_y_train.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in display_y_train.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  <div class="container bg-red">
+    <h3>Model dan Evaluasi</h3>
+      Rumus : y = {{ model.intercept_|floatformat:3 }} <input id="intercept" hidden type="number" value="{{ model.intercept_|floatformat:3 }}">
+      {% for row in model.coef_ %}
+      + {{ row|floatformat:3 }} x
+      {% if forloop.counter0 == 0 %}
+      {{ x_columns.0 }} <input id="{{ x_columns.0 }}" hidden type="number" value="{{ row|floatformat:3 }}">
+      {% elif forloop.counter0 == 1 %}
+      {{ x_columns.1 }} <input id="{{ x_columns.1 }}" hidden type="number" value="{{ row|floatformat:3 }}">
+      {% elif forloop.counter0 == 2 %}
+      {{ x_columns.2 }} <input id="{{ x_columns.2 }}" hidden type="number" value="{{ row|floatformat:3 }}">
+      {% elif forloop.counter0 == 3 %}
+      {{ x_columns.3 }} <input id="{{ x_columns.3 }}" hidden type="number" value="{{ row|floatformat:3 }}">
+      {% endif %}
+      {% endfor %}
+    <p>Koefisien determinasi (R<sup>2</sup>) : {{ r2|floatformat:3 }}</p>
+    <p>mean squared error : {{ mse|floatformat:3 }} </p>
+    <p>root mean squared error : {{ rmse|floatformat:3 }}</p>
+    <p>mean absolute error: {{ meanAbErr|floatformat:3 }}</p>
+  </div>
+  <hr>
+  <div class="container">
+    <h3>Data Test (X)</h3>
+    <div class="m-3"></div>
+    <table id="Xtest_df" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in display_X_test.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in display_X_test.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br><br>
+    <h3>Data Test (y)</h3>
+    <div class="m-3"></div>
+    <table id="ytest_df" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in display_y_test.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in display_y_test.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  <div class="container">
+    <h3>Selisih Nilai Test (Sebenarnya) dan Prediksi</h3>
+    <div class="m-3"></div>
+    <table id="pred_df" class="table table-sm" style="width:100%">
+      <thead>
+        <tr>
+          {% for col in pred_df.columns %}
+          <th>{{col}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in pred_df.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{cell}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="container" id="summary">
+    {{ summary|safe }}
+  </div>
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <img src="data:image/png;base64, {{ fig_test }}" alt="" height="100%">
+    </div>
+  </div>
+  <hr>
+  <div class="container">
+    Masukkan nilai pengujian berdasarkan model yang diperoleh
+    (y = {{ model.intercept_|floatformat:3 }}
+    {% for row in model.coef_ %}
+    + {{ row|floatformat:3 }} x
+    {% if forloop.counter0 == 0 %}
+    {{ x_columns.0 }}
+    {% elif forloop.counter0 == 1 %}
+    {{ x_columns.1 }}
+    {% elif forloop.counter0 == 2 %}
+    {{ x_columns.3 }}
+    {% elif forloop.counter0 == 3 %}
+    {{ x_columns.2 }}
+    {% endif %}
+    {% endfor %}
+    )
+    <div class="mb-4"></div>
+    <form id="prediksi" name="prediksi" method="get" action="#" novalidate>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Kelahiran</span>
+            <input required type="number" id="input_kelahiran" class="form-control" placeholder="Masukkan angka kelahiran"
+              name="kelahiran">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Kematian</span>
+            <input required type="number" id="input_kematian" class="form-control" placeholder="Masukkan angka kematian"
+              name="kematian">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Perpindahan Masuk</span>
+            <input required type="number" id="input_perpindahan_masuk" class="form-control" placeholder="Masukkan angka perpindahan masuk"
+              name="perpindahan_masuk">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Perpindahan Keluar</span>
+            <input required type="number" id="input_perpindahan_keluar" class="form-control" placeholder="Masukkan angka perpindahan keluar"
+              name="perpindahan_keluar">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <input type="submit" name="submit">
+        </div>
+      </div>
+    </form>
+    <br>
+    <div class="row">
+      <div class="col">
+        <h3>Prediksi Jumlah Penduduk</h3>
+        <h2 id="prediksi_jml_penduduk">0</h2> Jiwa
+      </div>
+    </div>
+    <div class="mb-5"></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('#all_data').DataTable();
+      $('#pred_df').DataTable();
+      $('#Xtrain_df').DataTable();
+      $('#ytrain_df').DataTable();
+      $('#Xtest_df').DataTable();
+      $('#ytest_df').DataTable();
+
+      $('#summary').children('table').addClass('table');
+
+      $('#prediksi').on('submit', function(e){
+        e.preventDefault(); // Mencegah form dari submit secara default
+
+        // Lakukan sesuatu di sini, misalnya validasi input
+        var input_kelahiran = $('#input_kelahiran').val();
+        var input_kematian = $('#input_kematian').val();
+        var input_perpindahan_masuk = $('#input_perpindahan_masuk').val();
+        var input_perpindahan_keluar = $('#input_perpindahan_keluar').val();
+
+        // Lakukan sesuatu di sini, misalnya validasi input
+        var intercept = $('#intercept').val();
+        var kelahiran = $('#kelahiran').val();
+        var kematian = $('#kematian').val();
+        var perpindahan_masuk = $('#perpindahan_masuk').val();
+        var perpindahan_keluar = $('#perpindahan_keluar').val();
+        var prediksi = parseFloat(intercept) + (kelahiran * input_kelahiran) + (kematian * input_kematian) + (perpindahan_masuk * input_perpindahan_masuk) + (perpindahan_keluar * input_perpindahan_keluar);
+        
+        $('#prediksi_jml_penduduk').html(prediksi);
+      });
+
+    });
+  </script>
+
+</body>
+
+</html>

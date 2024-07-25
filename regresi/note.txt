@@ -1,0 +1,21 @@
+<div class="container">
+    {{ summary|safe }}
+  </div>
+
+      x_new = X_train.to_numpy()
+    
+    x_new = sm.add_constant(X_train)
+    summary = sm.OLS(y_train, x_new).fit().summary()
+    html_summary = summary.as_html()
+
+
+
+   # membuat grafik dan mengubah ke file gambar
+    # sns.regplot(x=y_test, y=y_pred)
+    # plt.title("Nilai Data Test (x) dan Nilai Data Prediksi (y)")
+    # plt.xlabel("Nilai Data Test")
+    # plt.ylabel("Nilai Data Prediksi")
+    plt.scatter(x=y_test, y=y_pred)
+    plt.title("Nilai Data Test (x) dan Nilai Data Prediksi (y)")
+    plt.xlabel("Nilai Data Test")
+    plt.ylabel("Nilai Data Prediksi")
